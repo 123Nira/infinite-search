@@ -25,13 +25,14 @@ function App() {
     try {
       const response = await fetch(url);
       const data = await response.json();
-      setPhotos((prePhotoes) => {
+
+      setPhotos((oldPhotos) => {
         if (query && page === 1) {
           return data.results;
         } else if (query) {
-          return [...prePhotoes, ...data.results];
+          return [...oldPhotos, ...data.results];
         } else {
-          return [...prePhotoes, ...data]
+          return [...oldPhotos, ...data]
         }
       })
       setLoading(false);
@@ -40,8 +41,14 @@ function App() {
       setLoading(false)
     }
   }
+
   useEffect(() => {
+    
     fetchImages()
+    // eslint-disable-next-line
+  },[page]);
+
+  useEffect(() => {
      const event = window.addEventListener("scroll", () => {
       if ((!loading && window.innerHeight + window.scrollY) >= document.body.scrollHeight - 2) {
         setPage((oldPage) => {
@@ -50,7 +57,8 @@ function App() {
       }
     })
     return () => window.removeEventListener("scroll", event)
-  })
+    // eslint-disable-next-line
+  },[])
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -88,3 +96,4 @@ function App() {
 }
 
 export default App;
+
